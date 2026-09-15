@@ -15,7 +15,7 @@ In-browser js : Has access to window, document, DOM APIs, Read/write local files
 Node.js : No access to DOM, Have access to File system (fs), OS. Node.js can read/write files because it runs on a trusted machine (server/local), not inside a public browser sandbox.
 Bundle.js (Mobile) : Talks to native mobile code (Android/iOS) via bridge.
 
-# In-browser JS - in Html doc
+# In-browser JS - in Html doc script
  script tags - 
    1. <script>alert('hello')</script>
    2. <script src="/path/to/script.js"></script> - external script

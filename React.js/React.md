@@ -1,30 +1,46 @@
-# Framework vs Library
-Library - Collection of reusable functions or components . Eg. React
-Framework - Complete structure for building an application . Eg. React Native
+# Module System 
 
-Latest react version : 19.2 , released in 2025, Oct.
-Major changes : performance + developer experience upgrade.
-1. <Activity /> (biggest feature) - hide UI without unmounting.
-Previous - {isVisible && <Page />}
-Current - .
 
-# npm
-npm - manages packages , provide a large repo containing packages for multiple purpose and functionality
-how to make our app use npm : npm init
-npm start --- npm run start (because start is a word reserved by npm)
 
-# CommonJS (CJS) and ESM - the Node.js module system
-cjs - older , using require and module.exports
-jsm - modern , uses import export.
-For using esm system - for files executed by Node and not by React Native bundler (Metro) + JS engine (Hermes/JSC).
-1.  type : module in package.json -  
-    or
-2.  .mjs extension
-    else will get syntax error on import/export.
 
 # Why react components can directly use import/export ?
     React apps do not run directly in Node.js - Parcel or Metro or Webpack or Vite compile your JSX/TSX into normal JavaScript before Node or the browser ever sees it. React Native bundler (Metro) + JS engine (Hermes/JSC).
     note : App.js is processed and run by the React Native bundler (Metro) + JS engine (Hermes/JSC).
+
+# Execution
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# REndering and Performance 
+
+
+
+
+
+
+
+
+
+
+
+
+# Why REact fast? 
+
+
+
+
+
 
 # Identification as React Component
 1.  <MyComponent /> - this syntax
