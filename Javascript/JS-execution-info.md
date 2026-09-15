@@ -15,7 +15,7 @@ In-browser js : Has access to window, document, DOM APIs, Read/write local files
 Node.js : No access to DOM, Have access to File system (fs), OS. Node.js can read/write files because it runs on a trusted machine (server/local), not inside a public browser sandbox.
 Bundle.js (Mobile) : Talks to native mobile code (Android/iOS) via bridge.
 
-# In-browser JS - in Html doc script
+# In-browser JS - in Html doc script and Execution
  script tags - 
    1. <script>alert('hello')</script>
    2. <script src="/path/to/script.js"></script> - external script
@@ -47,20 +47,42 @@ Bundle.js (Mobile) : Talks to native mobile code (Android/iOS) via bridge.
   2. JS cannot access OS / local files freely. Why ?
   Any website could steal your files. It allows manually selecting file using : <input type="file" />
 
-# Modules
+# Module System 
+
+
+
+
+
+# Execution in Browser
+
+- Things own by whom : 
+callstack () + memory heap + compiler/interpreter + promise / microtask queue   => JS Engine  (v8, SpiderMonkey)
+setTimeout, DOM, fetch, callback / macrotask queue, event loop, web workers => browser
+
+web worker : 
+A Web Worker is a real OS-level thread, provided by the browser, running its own separate instance of the JS engine — its own call stack, its own heap, its own event loop. It is not concurrency bolted onto the main thread; it's a fully independent execution context running in parallel.
+Main resposibility : background tasks or CPU Heavy task. 
+
+service workers : background representative handling web-app/network handling, caching, push notifications, etc. It is programmable.
+Ex : // service-worker.js
+
+self.addEventListener("fetch", (event) => {
+    console.log("A request happened:", event.request.url);
+});
+
+
+
+
+
+
+
+# ES6+ 
+
+
 
 # Built-in APIS/ function
 ECMAScript = Modern JS Engines (Any platform using Modern JS Engines can execute Ecmascript things.)
 
-- Web APIs (browser APIs - provided by browser)
-DOM API - document, window,Element, Node, HTMLElement,document.querySelector()
-Network API - XMLHttpRequest, EventSource, WebSocket
-Storage APIs - local Storage, Session Storage
-Event APIS - addeventListener, removeEventListener
-Default events listened by browser - click, hover, mousemove.
-Geolocation API - history, location, navigator
-Rendering API - 
-Media API
 
 - JS Engine based built-in APIs / functions  - browser, node.
 Timer API - setTimeout, clearTimeout, setInterval
