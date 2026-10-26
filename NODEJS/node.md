@@ -8,7 +8,7 @@ For using esm system - for files executed by Node and not by React Native bundle
     else will get syntax error on import/export.
 
 
-# Node.js Jacvascript and Execution 
+# Node.js Javascript and Execution 
 
 Node.js : Node.js is a runtime environment that lets you execute JavaScript outside a browser.
 
@@ -39,3 +39,9 @@ Worker thread : additional thread that can run JavaScript separately from Node.j
    Push notifications        - Server-side push libraries/services
    Run independently of a webpage    -  Node server/process
    
+  node process :
+     - event loop
+     - file system
+     - http
+     - timers
+     - js engine

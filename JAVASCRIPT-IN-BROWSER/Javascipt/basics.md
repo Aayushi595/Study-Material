@@ -1,3 +1,15 @@
+#JS Info
+#script tag
+#Ecmascript - classic vs modern js
+#variable declaration & Errors
+#this
+#primitive types and operations/operators
+#Refernce types and operations/ operators, (functions - all about functions , callbacks, closures, objects)
+#Object vs JSOn
+#Asynchronous Programming -async/await , promises.
+#JS Execution
+#Errors
+#Classes
 
 # Javascript
 1. interpreted - compilation and conversion to machine code happens at runtime. (no additional bytecode file)
@@ -10,25 +22,80 @@ Platforms -  browser - in-browser js - v8/spidermonkey
              basically everything that have Javascript Engine.
 Unique - Full integrated with HTML/CSS. Can run in browser, server, mobile.
 
-# In-browser js vs Node.js vs bundle.js (bundled by metro)
-In-browser js : Has access to window, document, DOM APIs, Read/write local files freely , cannot access OS. When JS runs in a browser, Code comes from random websites. A malicious site could steal your files, Delete your data, Install malware.
-Node.js : No access to DOM, Have access to File system (fs), OS. Node.js can read/write files because it runs on a trusted machine (server/local), not inside a public browser sandbox.
-Bundle.js (Mobile) : Talks to native mobile code (Android/iOS) via bridge.
+# ECMAScript 
+Standardized specification that defines how JavaScript should work and language that implements that standard.
+Classic JavaScript (pre-ES6 style)
+Modern JavaScript (ES6+)
 
-# In-browser JS - in Html doc script and Execution
- script tags - 
-   1. <script>alert('hello')</script>
-   2. <script src="/path/to/script.js"></script> - external script
-       <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.js"></script> - third party.
-   <script src="file.js">
-      alert(1); // the content is ignored, because src is set
-      </script>
+Variable declaration - `var` - `let`, `const`
+Functions - Function declarations and expressions - Arrow functions `=>`
+String formatting - String concatenation with `+` - Template literals using backticks
+Object properties - Explicit key-value assignments - Property shorthand, computed properties
+Object destructuring - Access properties individually - Extract properties directly
+Arrays and objects - Traditional loops and methods - `map()`, `filter()`, `find()`, etc.
+Modules - Often global scripts or custom module systems - `import` and `export`
+Asynchronous code - Callbacks - Promises and `async/await`
+Default parameters - Manual fallback logic - Default parameter values
+Classes - Constructor functions and prototypes - `class`, `extends`, `super`
+Spread and rest - Manual copying or `arguments` - `...` syntax
+Optional property access - Manual null checks - `?.`
+Nullish fallback - `||` (with different behavior) - `??`
+Object iteration - `for` loops, `for...in` - Also `for...of`
 
-   The benefit of a separate file is that the browser will download it and store it in its cache. Other pages that reference the same script will take it from the cache instead of downloading it, so the file is actually downloaded only once.
+# script tag - 
+  Tells browser to execute the script - inline or other file.
 
-   # script tag
-  By default, <script> is treated as a classic script(browser wali js).That means no import or export statements are allowed in the file.
-  If your app.js uses import, you must tell the browser (or Parcel) that it’s a classic JavaScript(js of browser) module by writing: <script type="module" src="./app.js"></script>
+  Inline script execution : 
+    html parsing -> script tag encountered, html parsing pauses -> no concept of script downloading -> script parsing -> script execution -> html parsing continue.
+    #Note : there is no effect of async or differ attributes for inline script.
+
+  #External scripts :
+   - normal script 
+    html parsing -> script tag encountered, html parsing pauses -> js download/fetch -> js parsing -> js execution -> html parsing continue
+
+    - async attribute 
+    html parsing -> script encountered -> html parsing and js fetching runs in parallel -> html and js parsing continues -> script executes, html parsing paused -> script done, html parsing continues
+
+    - defer attribute
+    html parsing -> script encountered , script downloading and html parsing continues -> script parsing and html parsing continues -> html parsing done -> js execution continues.
+
+    #Note :  only defer can defer teh script execution aftre html parsing. 
+
+  #Multiple scripts:
+   scripts execute in the document order. next script will be executed after the previous finishes/crashes. Note script 1's crash will not prevent script 2 from running.
+   Thus, Accessing a variable and function form script 1 , but it is declared in script 2 , will give reference error always, even with var declaration.
+ 
+
+  #Modern JS : ES Modules (import/export) - <script type="module" src="app.js"></script>
+  External module scripts are deferred by default. Parse HTML while downloading module -> Finish parsing HTML -> Execute module when its dependencies are ready.
+
+  WIthout import/export : ex. 
+  math.js  : function add(a, b) {
+    return a + b;
+  }
+
+  app.js : console.log(add(2, 3)); // 5
+
+  #The benefit of a separate file is that the browser will download it and store it in its cache. Other pages that reference the same script will take it from the cache instead of downloading it, so the file is actually downloaded only once.
+
+  #Script in strict mode. 
+  Inline : 
+    <script>
+    "use strict";
+    </script>
+
+  External : 
+  <script src="app.js"></script>
+
+  app.js - 
+  "use strict";
+    var b = 2;
+    const c = 4;
+    let d = 6;
+  
+  #Scope
+  classic scripts : Inline or external share same global scope. (global scope). variable declared in file a will be accessible in file b directy.  But order matters
+  type=module (module scope): Each file has its own global scope. Like in out React project setup. we can't directly use variables / functions declared in other file, we need to import and export them.
 
   1. Browser does not allow JS to read data of another website/website opened in another tab under SOP (same origin policy). why ?
     Imagine this:
@@ -47,14 +114,49 @@ Bundle.js (Mobile) : Talks to native mobile code (Android/iOS) via bridge.
   2. JS cannot access OS / local files freely. Why ?
   Any website could steal your files. It allows manually selecting file using : <input type="file" />
 
-# Module System 
 
+# let, var, const - Scope and Hoisting, Lexical Env.
+Scope of a variable - the block/part of code where we can access a variable.
+Scope is created by - funtion, global scope (and not object), block (object does not create a new scope).
+Scopes for this - funtion, global scope (and not object).
 
+let, const and var declarations are hoisted. 
+let & const are hoisted but in TDZ. If we access a before initilization statement, it gives reference error. 
+TDZ : time between let & const declaration and initialization.
+ Ex :  a exists in memory
+       a is uninitialized
 
+- var - declared with undefined assigned. No reference error even if we try accessing it before initialization.
+- let - block scope . Can be reassigned and cannot be redeclared on same scope.
+- const - block scope. needed initialization when declared. Cannot be declared or reasigned in same scope.
+- var - function scope. Can be redeclared and reasigned in same scope. 
 
+Note # const does not make an object immutable.
+const user = { name: "Aayushi" };
+user.name = "Rahul";  
+
+#Note - var declared in global scope become the property of global window object in strict and non-strict modes.
+Ex : var b = 5; console.log(window.b) //5
+
+#Note : For classic scripts (inline or external) , var does not becomes window property automatically if script is type=module.
+  const c = 4;
+  window.c = 10;
+  console.log(c);              //4
+  console.log(window.c);       //10
+  console.log(window);     // this will show c as property on window object with value 10
+
+Lexical Env. : 
+Closure : Lexical Env for function. Function with its lexical env (parent's env)
+
+# this in different scopes.
+this - this is a special runtime keyword in JavaScript that represents the execution context.
+global scope - this = window. (non scrict mode)
+block   - does not create a new this value.
+function - this is a special keyword that refers to the object that is executing the current function, how the function is called/who called the function.
+function declared in global scope , has value of this = window (in non-scrict mode). Normal function has the capability to chnage the value of this based on how it is called, using call, apply, bind, while arrow function don't.
+arrow function - does not create this binding of its own. value of this inside arrow function = value of this in lexical scope where the arrow function is defined.
 
 # Execution in Browser
-
 - Things own by whom : 
 callstack () + memory heap + compiler/interpreter + promise / microtask queue   => JS Engine  (v8, SpiderMonkey)
 setTimeout, DOM, fetch, callback / macrotask queue, event loop, web workers => browser
@@ -69,57 +171,40 @@ Ex : // service-worker.js
 self.addEventListener("fetch", (event) => {
     console.log("A request happened:", event.request.url);
 });
-
-
-
-
-
-
-
-# ES6+ 
-
-
-
-# Built-in APIS/ function
-ECMAScript = Modern JS Engines (Any platform using Modern JS Engines can execute Ecmascript things.)
-
-
-- JS Engine based built-in APIs / functions  - browser, node.
-Timer API - setTimeout, clearTimeout, setInterval
-import/export , async/await 
-
-- Node Runtime APIs : process, Buffer, path, http, os, fs, require (cjs), __dirname, __filename, module. This will give Reference Error in browser and RN (Hermes).
-
-# JS in different Engines.
-1. Browsers (SpiderMonkey, V8)
-  Browser setup contains :  
-    - EventLoop
-    - DOM
-    - redering Engine
-    - Javascript Engine
-
-2. Node.js (V8)
-   node process :
-     - event loop
-     - file system
-     - http
-     - timers
-     - js engine
+ 
 
 # JS Code Execution.
 1. Initial Parsing - JS Scans the entire script to build an Abstract Syntax Tree.
 2. GEC created.
 3. Execution context two phases: 
    Memory / creation phase - All the toplevel variables are functions are assigned memory (local memory).
-   Code Execution - variables are asigned value, Function invocation creates a new execution context of itself. The function param is also assigned memory in the memory allocation phase of this function. In execution phase, as soon as reurn is entountered, function return the control to where it was invoked.
+   Code Execution - variables are asigned value, Function invocation creates a new execution context of itself. The function param is also assigned memory in the memory allocation phase of this function. In execution phase, as soon as return is entountered, function return the control to where it was invoked.
 
    Execution Context is managed using call stack. GEC at bottom of stack. At the end, GEC is also poped.
 
-  - Memory Creation Phase and Hoisting.
+     Browser setup contains :  
+    - EventLoop
+    - DOM
+    - redering Engine
+    - Javascript Engine
+
 
 # Error, exception, warning (Browser, Node.js)
 Error = object, new Error("Boom");
-Exception = event of throwing that error, throw new Error(...);
+Exception = event of throwing that error, throw new Error(...);  // here Error is class name, new Error() returns object.
+Note : There is no built-in Exception class in js like in PHP
+
+Types of error and built-in error classes in js : 
+
+1) parsing time - 
+syntax error -  nothing executes.
+throw new SyntaxError("Invalid syntax");
+- redeclaration and resiignment againt the rule for let and const gives syntax error
+
+2) Runtime - 
+Execution stops as error is encountered , if not handled using catch. 
+
+Synchronous Code : 
 The exception travels up the call stack looking for try-catch. If not found ,  Uncaught Exception. Uncaught Exception causes code break and Process Execution stops. (Thumb rule)
         Exception thrown
         ↓
@@ -129,13 +214,8 @@ The exception travels up the call stack looking for try-catch. If not found ,  U
         ↓
         Process exits (complete stack is emptied and the complete script stops.)
 
-1. In parsing phase : Syntax Error -  stops entire code block from running.
-2.  Runtime : 
-      1. Type Error - the operation being performed on a varibale is incompatible/incorrect.
-      2. Reference Error - try to access a variable or function that does not exist in current scope. 
-      3. Unhandled promise Rejection - promise rejection not handled using catch. 
-          Results : 
-          1. Synchronous 
+Asynchronous operations : 
+      1. Synchronous 
             Promise.reject("Failed");     
             console.log("A");        //A will be printed then unhandled promise rejection is thrown.
             Because promise rejection happens asynchronously. The rejection is reported later by the microtask queue. The current call stack has already finished.
@@ -158,43 +238,56 @@ The exception travels up the call stack looking for try-catch. If not found ,  U
             
             This can be handled using try-catch or stored the result in a variable . eg :
             const var = Promise.reject("453")
-          
-        4. File System and Network Error - Generally promise based apis so error works according to it.
-        5. Module Resolution Error - Error but continues.
-        6. Logical Errors - No error,  but unexpected results.
 
-        # Error inside eventListener
-        In browser - only the function handling the event is removed after error, when the event is triggered. 
-        In Node.js - process ends, code after the event emmitter trigger is not executrd.
+    # Runtime errors 
+      1. Type Error - the operation being performed on a varibale is incompatible/incorrect.
+        throw new TypeError("Invalid type");
+         - Possible type errors : 
+         1. Cannot read properties of undefined - You try to access a property on undefined.
+         Ex : let user; console.log(user.name)
+         2. Cannot read properties of null - You try to access a property on null.
+         3. X is not a function - You try to call a value that isn't callable.
+         4. X is not a constructor - You use new with something that cannot be used as a constructor.
+         5. Assignment to constant variable - You try to reassign a variable declared with const.
+         6. Cannot assign to read only property - You try to modify a read-only property. In strict mode, this throws a TypeError because the property is not writable.
+         Ex : const user = {};
 
+          Object.defineProperty(user, "name", {
+            value: "Aayushi",
+            writable: false
+          });
 
-# let, var, const - Scope and Hoisting, Lexical Env.
-Scope of a variable - the block/part of code where we can access a variable.
-Scope is created by - funtion, global scope (and not object), block (object does not create a new scope).
-Scopes for this - funtion, global scope (and not object).
+          user.name = "Priya"; 
+          7. Cannot convert undefined or null to object - ou pass null or undefined to an operation that requires an object.
+          EX : Object.keys(null);
+          8. X is not iterable - You try to iterate over a value that isn't iterable.
+          Ex : Iterating an object
+          9. X is not a valid argument type for an operation - Some built-in methods reject values of an incompatible type.
+          Ex : const number = 123; number.toUpperCase(); //A number doesn't have a toUpperCase() method.
 
-let, const and var declarations are hoisted. 
-let & const are hoisted but in TDZ. If we access a before initilization statement, it gives reference error. 
- Ex :  a exists in memory
-       a is uninitialized
+      2. Reference Error - try to access a variable or function that does not exist in current scope. 
+      throw new ReferenceError("Variable not defined");
+      Ex : accessing let and const in temporal dead zone
 
-var is declared with undefined assigned. No reference error even if we try accessing it before initialization.
-let - block scope . Can be reassigned and cannot be redeclared on same scope.
-const - block scope. needed initialization when declared. Cannot be declared or reasigned in same scope.
-var - function scope. Can be redeclared and reasigned in same scope. 
-Redeclaring var as const / let, simply redeclaring a let, simply redeclaring a const : Syntax error : Identifier 'x' has already been declared
+      3. RangeError - Invalid array length
+      throw new RangeError("Value out of range");
 
+      4. Unhandled promise Rejection - promise rejection not handled using catch. 
+      no dedicated error class. reject(new Error("Request failed"));
+      5. Module Resolution Error - Error but continues.
+      Module loader (belongd to the build tool) reports it when module is not found. Breaks the whole execution.
 
-Lexical Env. : 
-Closure : Lexical Env for function. Function with its lexical env (parent's env)
+      For static imports : If there is any non-existing module, then the dependency chain resolves modules recursively down . Any resolution failed - the app simply crashes with error at any page you open.
 
-# this in different scopes.
-this - this is a special runtime keyword in JavaScript that represents the execution context.
-global scope - this = window. (non scrict mode)
-block   - does not create a new this value.
-function - this is a special keyword that refers to the object that is executing the current function, how the function is called/who called the function.
-function declared in global scope , has value of this = window (in non-scrict mode). Normal function has the capability to chnage the value of this based on how it is called, using call, apply, bind, while arrow function don't.
-arrow function - does not create this binding of its own. value of this inside arrow function = value of this in lexical scope where the arrow function is defined.
+      For dynamic imports : using import('') => promise => asynchronous behaviour. Ex: we use it with lazy() in React.
+
+      6. Logical Errors - No error,  but unexpected results.
+      7. URIError - Invalid URI encoding/decoding input.
+      throw new URIError("Invalid URI");
+
+      # Error inside eventListener
+      In browser - only the function handling the event is removed after error, when the event is triggered. 
+      In Node.js - process ends, code after the event emmitter trigger is not executrd.
 
 # Primitive types, datastructures, operations and conversions (explicit / implicit (type coersion)) in JS, memory model.
 
@@ -233,7 +326,16 @@ arrow function - does not create this binding of its own. value of this inside a
       console.log(a / b); // 3n .   note => this removes the fractional part.
 
     3. String . 
-     Template Literals .  
+     #String Concatenation : 
+      Ex : var name = "Aayushi"; var age = 25;
+      console.log("My name is " + name + " and I am " + age);
+
+     #Template Literals 
+      console.log(`My name is ${name} and I am ${age}`); // Template literals use backticks and ${} to embed expressions.
+      Extra benefit of this syntax other than readbility is : 
+      - const message = `Hello Aayushi,
+        Welcome to JavaScript.
+        Keep learning!`;         - multiline strings with escape sequence.
 
 - Reference Types : Object.
   # Object 
@@ -283,6 +385,12 @@ arrow function - does not create this binding of its own. value of this inside a
         const num = new Number(8);
         num.name = "Age";
         console.log(num);     // [Number : 8]{name : "Age"}
+
+    #We can also destructiure arrays in js.
+    const [first, , third] = ["red", "blue", "green"];  - use in react useState syntax.
+    
+    Ex : const [formData, setFormData] =  [{ email: '', password: '' },   function setState() {}] -  array returned by useState
+
 
     2. Function.
     const fn = () => {} //typeof(fn) Function. Because JavaScript treats functions differently from other objects because they can be called.
@@ -614,10 +722,6 @@ let curriedSum = curry(sum);
 
 - Function composition and pipe()
 
-
- 
-   
-
 # String and Methods
 Note - Strings are immutable in JS, there is no method that modifies original strings.
 
@@ -689,6 +793,63 @@ Algo : function myReduce(arr, callback, initialValue) {
   return acc;
 }
 
+# JSON  
+lightweight text-based format used to store and exchange data. 
+
+Rules : 
+Values must be valid JSON types.
+Comments are not allowed.
+Trailing commas are not allowed.
+
+
+JSON supports six types of values: 
+1) Object : key-value pair
+Extra rule : Strings and property names must use double quotes, Property names in an object must be strings.
+
+2) Array : ["Jaipur", "Delhi"]
+3) String : "42"
+4) Number : 1
+5) Boolean : true false
+6) NUll : null
+
+- undefined and functions are not valid JSON values.
+
+- JSON does not have to be an object.
+
+# Normal JS Object
+Syntax/Rule : 
+1) empty {}
+2) key - value pairs . 
+no rule for key and value. Even undefined and null can be key.
+Keys containing spaces, invalid identifiers without quotes: { first name: "Aayushi" }, { first-name: "Aayushi" }
+
+3) valid object-literal property definitions
+    const obj3 = {
+        greet() {
+            return "Hello";
+        }
+    };   
+
+     // shorthand property
+    const name = "Aayushi";
+      const obj4 = { name };  equivalent to { name : name }
+
+    // Computed property names
+    const key = "age";
+    const obj5 = { [key]: 25 };
+    
+    // Getter and setter
+    const obj6 = {
+    get name() {
+        return "Aayushi";
+    }
+
+    set name(value) {
+        console.log(value);
+    }
+};
+
+
 # JS Classes (ES6+) Inheritance and PHP Class Inheritance.
 whenever a new instance of class is created, constructor is called.  
 Javascript :
@@ -756,7 +917,46 @@ UnMounting Phase :
 ComponentWillUnMount : When we switch components (pages) in single page application.
 Usecase : to clear async functions' and execution, that continues even when the component or page is switched. (eg. setInterval, setTimeout), this remains hangs in the browser. If the page conataining setInterval is switched 3 times, three new setInterval is starts and run contibuosly.
 
+# Spread operators  - Modern JS
+Copying, combining and updating an array and object - produces new array, but creates shallow copy.
+Ex :  const numbers = [1, 2, 3];
+- const copy = numbers.slice() - classic
+- const copy = [...numbers]; - modern
+- const combined = [...first, ...second]; 
+- const updated = [...numbers, 4]; - adding new number
+This is useful in React state updates, where creating a new array is often preferable to mutating the existing state.
 
+
+# Copying and updating an object
+const user = {
+    name: "Aayushi",
+    age: 25
+};
+
+const updatedUser = {
+    ...user,
+    age: 26
+};
+
+# Rest operator
+function y(...numbers) {
+  console.log(typeof numbers); // "object"
+  console.log(Array.isArray(numbers)); // true
+  console.log(numbers); // case1 - [10, 20, 30], case2 - [[10,20]]
+}
+
+y(10, 20, 30); 
+y([10, 20])
+
+
+# Asynchronous programming: callbacks vs promises vs async/await
+
+How to make our code asynchronous.
+1) Callbacks - classic js and modern js
+2) promises - classic & modern
+- consuming promise :
+  classic - then , catch
+  modern - async / await  
 
 
 
